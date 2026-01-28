@@ -457,12 +457,14 @@ async def get_admin_stats(admin: str = Depends(verify_admin)):
     questionnaire_unreviewed = await db.questionnaire_responses.count_documents({"status": "unreviewed"})
     questionnaire_reviewed = await db.questionnaire_responses.count_documents({"status": "reviewed"})
     questionnaire_archived = await db.questionnaire_responses.count_documents({"status": "archived"})
+    questionnaire_watched = await db.questionnaire_responses.count_documents({"watched": True})
     
     # Contact submission counts by status
     contact_total = await db.contact_submissions.count_documents({})
     contact_new = await db.contact_submissions.count_documents({"status": "new"})
     contact_reviewed = await db.contact_submissions.count_documents({"status": "reviewed"})
     contact_archived = await db.contact_submissions.count_documents({"status": "archived"})
+    contact_watched = await db.contact_submissions.count_documents({"watched": True})
     
     # Questionnaire responses wanting contact
     wants_contact_yes = await db.questionnaire_responses.count_documents({"wants_contact": True})
@@ -479,6 +481,7 @@ async def get_admin_stats(admin: str = Depends(verify_admin)):
                 "reviewed": {"count": questionnaire_reviewed, "percentage": pct(questionnaire_reviewed, questionnaire_total)},
                 "archived": {"count": questionnaire_archived, "percentage": pct(questionnaire_archived, questionnaire_total)},
             },
+            "watched": {"count": questionnaire_watched, "percentage": pct(questionnaire_watched, questionnaire_total)},
             "contact_consent": {
                 "yes": {"count": wants_contact_yes, "percentage": pct(wants_contact_yes, questionnaire_total)},
                 "no": {"count": wants_contact_no, "percentage": pct(wants_contact_no, questionnaire_total)},
@@ -490,7 +493,8 @@ async def get_admin_stats(admin: str = Depends(verify_admin)):
                 "new": {"count": contact_new, "percentage": pct(contact_new, contact_total)},
                 "reviewed": {"count": contact_reviewed, "percentage": pct(contact_reviewed, contact_total)},
                 "archived": {"count": contact_archived, "percentage": pct(contact_archived, contact_total)},
-            }
+            },
+            "watched": {"count": contact_watched, "percentage": pct(contact_watched, contact_total)},
         }
     }
 
