@@ -43,7 +43,7 @@ const AdminLoginPage = () => {
           <span className="admin-login-subtitle">Reading Room</span>
         </div>
         
-        <form onSubmit={handleSubmit} className="admin-login-form">
+        <form onSubmit={handleSubmit} className="admin-login-form" data-testid="admin-login-form">
           <div className="admin-form-group">
             <input
               type="text"
@@ -54,6 +54,7 @@ const AdminLoginPage = () => {
               autoComplete="username"
               required
               disabled={isLoading}
+              data-testid="admin-username-input"
             />
           </div>
           
@@ -67,17 +68,19 @@ const AdminLoginPage = () => {
               autoComplete="current-password"
               required
               disabled={isLoading}
+              data-testid="admin-password-input"
             />
           </div>
 
           {error && (
-            <div className="admin-login-error">{error}</div>
+            <div className="admin-login-error" data-testid="admin-login-error">{error}</div>
           )}
 
           <button 
             type="submit" 
             className="admin-login-btn"
             disabled={isLoading || !username || !password}
+            data-testid="admin-login-submit"
           >
             {isLoading ? 'Verifying...' : 'Enter'}
           </button>
