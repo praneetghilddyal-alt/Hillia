@@ -174,7 +174,7 @@ const QuestionnairePage = () => {
               maxWidth: '480px',
             }}
           >
-            This questionnaire will take approximately 5-7 minutes. Your responses are saved automatically. You may return to complete it later.
+            Responses are saved. You may return later.
           </p>
 
           <button className="entry-cta" onClick={handleBegin}>
