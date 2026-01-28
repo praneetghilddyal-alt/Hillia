@@ -69,9 +69,6 @@ const ContactPage = () => {
         {isSubmitted ? (
           <div className="editorial-content">
             <p>Your message has been received.</p>
-            <p style={{ color: 'var(--text-secondary)' }}>
-              Submissions are reviewed manually. If your inquiry warrants a response, you will hear from us.
-            </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
