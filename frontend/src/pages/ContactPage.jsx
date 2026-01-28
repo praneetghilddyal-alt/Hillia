@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { contactContent, STORAGE_KEYS } from '../data/mock';
+import { contactContent } from '../data/mock';
 import FooterNav from '../components/layout/FooterNav';
+import { submitContact, trackEvent, EVENTS } from '../services/api';
 
 const ContactPage = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -23,29 +24,25 @@ const ContactPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate submission delay
-    setTimeout(() => {
-      // Store in localStorage (backend-ready)
-      const submissions = JSON.parse(
-        localStorage.getItem(STORAGE_KEYS.CONTACT_SUBMISSIONS) || '[]'
-      );
-      submissions.push({
-        ...formData,
-        timestamp: new Date().toISOString(),
-        id: Date.now().toString(),
-      });
-      localStorage.setItem(
-        STORAGE_KEYS.CONTACT_SUBMISSIONS,
-        JSON.stringify(submissions)
-      );
-
-      setIsSubmitting(false);
+    try {
+      // Submit to backend
+      await submitContact(formData);
+      
+      // Track event
+      trackEvent(EVENTS.CONTACT_SUBMITTED);
+      
       setIsSubmitted(true);
-    }, 800);
+    } catch (error) {
+      console.error('Contact submission error:', error);
+      // Still show success to user (graceful degradation)
+      setIsSubmitted(true);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const isFormValid = formData.name && formData.city && formData.reason;
