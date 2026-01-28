@@ -51,9 +51,10 @@ const QuestionnairePage = () => {
       } else if (atContactSection) {
         setShowContactSection(true);
         setShowLanding(false);
-      } else if (sectionIndex !== undefined) {
+      } else if (sectionIndex !== undefined && (sectionIndex > 0 || questionIndex > 0)) {
         setCurrentSectionIndex(sectionIndex);
         setCurrentQuestionIndex(questionIndex);
+        setShowLanding(false);
       }
     }
 
