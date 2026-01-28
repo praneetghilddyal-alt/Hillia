@@ -199,11 +199,6 @@
   letter-spacing: 0.05em;
   color: var(--text-secondary);
   text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.footer-nav-link:hover {
-  color: var(--text-primary);
 }
 
 .footer-imprint {
