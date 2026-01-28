@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
-import { getContactSubmissions } from '../../services/adminApi';
+import { getContactSubmissions, updateContactSubmission } from '../../services/adminApi';
 
 /**
  * Admin Contact List Page
@@ -13,22 +13,36 @@ const AdminContactListPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [watchedFilter, setWatchedFilter] = useState('');
 
   const loadSubmissions = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await getContactSubmissions(statusFilter || null);
+      const watchedValue = watchedFilter === 'watched' ? true : watchedFilter === 'unwatched' ? false : null;
+      const data = await getContactSubmissions(statusFilter || null, watchedValue);
       setSubmissions(data);
     } catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);
     }
-  }, [statusFilter]);
+  }, [statusFilter, watchedFilter]);
 
   useEffect(() => {
     loadSubmissions();
   }, [loadSubmissions]);
+
+  const toggleWatch = async (e, submissionId, currentWatched) => {
+    e.stopPropagation();
+    try {
+      await updateContactSubmission(submissionId, { watched: !currentWatched });
+      setSubmissions(submissions.map(s => 
+        s.submission_id === submissionId ? { ...s, watched: !currentWatched } : s
+      ));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -69,6 +83,15 @@ const AdminContactListPage = () => {
             <option value="reviewed">Reviewed</option>
             <option value="archived">Archived</option>
           </select>
+          <select
+            value={watchedFilter}
+            onChange={(e) => setWatchedFilter(e.target.value)}
+            className="admin-filter-select"
+          >
+            <option value="">All</option>
+            <option value="watched">Watching</option>
+            <option value="unwatched">Not Watching</option>
+          </select>
           <button onClick={loadSubmissions} className="admin-refresh-btn">
             Refresh
           </button>
@@ -85,11 +108,20 @@ const AdminContactListPage = () => {
             {submissions.map((submission) => (
               <div
                 key={submission.submission_id}
-                className="admin-list-item"
+                className={`admin-list-item ${submission.watched ? 'admin-list-item-watched' : ''}`}
                 onClick={() => navigate(`/admin/contact/${submission.submission_id}`)}
               >
                 <div className="admin-list-item-main">
-                  <span className="admin-list-item-name">{submission.name}</span>
+                  <div className="admin-list-item-left">
+                    <button
+                      className={`admin-watch-btn ${submission.watched ? 'admin-watch-btn-active' : ''}`}
+                      onClick={(e) => toggleWatch(e, submission.submission_id, submission.watched)}
+                      title={submission.watched ? 'Remove from watch list' : 'Add to watch list'}
+                    >
+                      {submission.watched ? '●' : '○'}
+                    </button>
+                    <span className="admin-list-item-name">{submission.name}</span>
+                  </div>
                   <span className="admin-list-item-date">{formatDate(submission.timestamp)}</span>
                 </div>
                 <div className="admin-list-item-reason">{submission.reason}</div>
