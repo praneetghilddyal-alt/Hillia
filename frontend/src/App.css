@@ -356,18 +356,12 @@
   color: var(--text-secondary);
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: default;
   padding: 8px 0;
-  transition: color 0.2s ease;
-}
-
-.questionnaire-nav-btn:hover:not(:disabled) {
-  color: var(--text-primary);
 }
 
 .questionnaire-nav-btn:disabled {
   opacity: 0.3;
-  cursor: not-allowed;
 }
 
 /* Community Blocks */
