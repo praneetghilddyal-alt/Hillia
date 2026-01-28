@@ -289,6 +289,7 @@ async def track_event(event_type: str, session_id: str, event_data: Dict[str, An
 @api_router.get("/admin/questionnaire", response_model=List[QuestionnaireResponse])
 async def get_questionnaire_responses(
     status: Optional[ResponseStatus] = None,
+    watched: Optional[bool] = None,
     limit: int = 50,
     skip: int = 0,
     admin: str = Depends(verify_admin)
@@ -297,8 +298,10 @@ async def get_questionnaire_responses(
     query = {}
     if status:
         query['status'] = status.value
+    if watched is not None:
+        query['watched'] = watched
     
-    responses = await db.questionnaire_responses.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
+    responses = await db.questionnaire_responses.find(query, {"_id": 0}).sort("timestamp", -1).skip(skip).limit(limit).to_list(limit)
     
     for resp in responses:
         if isinstance(resp.get('timestamp'), str):
@@ -325,9 +328,10 @@ async def update_questionnaire_response(
     status: Optional[ResponseStatus] = None,
     internal_notes: Optional[str] = None,
     internal_score: Optional[InternalScore] = None,
+    watched: Optional[bool] = None,
     admin: str = Depends(verify_admin)
 ):
-    """Admin: Update questionnaire response (notes, status, score)"""
+    """Admin: Update questionnaire response (notes, status, score, watched)"""
     update_data = {}
     
     if status:
@@ -336,6 +340,8 @@ async def update_questionnaire_response(
         update_data['internal_notes'] = internal_notes
     if internal_score:
         update_data['internal_score'] = internal_score.model_dump()
+    if watched is not None:
+        update_data['watched'] = watched
     
     if not update_data:
         raise HTTPException(status_code=400, detail="No update data provided")
@@ -367,6 +373,7 @@ async def delete_questionnaire_response(response_id: str, admin: str = Depends(v
 @api_router.get("/admin/contact", response_model=List[ContactSubmission])
 async def get_contact_submissions(
     status: Optional[ContactStatus] = None,
+    watched: Optional[bool] = None,
     limit: int = 50,
     skip: int = 0,
     admin: str = Depends(verify_admin)
@@ -375,8 +382,10 @@ async def get_contact_submissions(
     query = {}
     if status:
         query['status'] = status.value
+    if watched is not None:
+        query['watched'] = watched
     
-    submissions = await db.contact_submissions.find(query, {"_id": 0}).skip(skip).limit(limit).to_list(limit)
+    submissions = await db.contact_submissions.find(query, {"_id": 0}).sort("timestamp", -1).skip(skip).limit(limit).to_list(limit)
     
     for sub in submissions:
         if isinstance(sub.get('timestamp'), str):
@@ -389,6 +398,7 @@ async def update_contact_submission(
     submission_id: str,
     status: Optional[ContactStatus] = None,
     internal_notes: Optional[str] = None,
+    watched: Optional[bool] = None,
     admin: str = Depends(verify_admin)
 ):
     """Admin: Update contact submission"""
@@ -398,6 +408,8 @@ async def update_contact_submission(
         update_data['status'] = status.value
     if internal_notes is not None:
         update_data['internal_notes'] = internal_notes
+    if watched is not None:
+        update_data['watched'] = watched
     
     if not update_data:
         raise HTTPException(status_code=400, detail="No update data provided")
