@@ -280,6 +280,20 @@ const QuestionnairePage = () => {
 
   // Completion screen
   if (isCompleted) {
+    const handleStartOver = () => {
+      localStorage.removeItem(STORAGE_KEYS.QUESTIONNAIRE_RESPONSES);
+      localStorage.removeItem(STORAGE_KEYS.QUESTIONNAIRE_PROGRESS);
+      setResponses({});
+      setCurrentSectionIndex(0);
+      setCurrentQuestionIndex(0);
+      setIsCompleted(false);
+      setShowLanding(true);
+      setShowContactSection(false);
+      setWantsContact(null);
+      setPreferredContact('');
+      setContactInfo({ email: '', phone: '' });
+    };
+
     return (
       <div className="page">
         <div className="questionnaire-progress">
@@ -300,9 +314,12 @@ const QuestionnairePage = () => {
           <p style={{ fontSize: '15px', color: 'var(--text-secondary)', lineHeight: '1.8', maxWidth: '480px' }}>
             {wantsContact ? questionnaireContent.completion.message : questionnaireContent.completion.anonymousMessage}
           </p>
-          <div style={{ marginTop: '60px' }}>
+          <div style={{ marginTop: '60px', display: 'flex', gap: '24px' }}>
             <button className="questionnaire-nav-btn" onClick={() => navigate('/philosophy')} style={{ fontSize: '13px' }}>
               Exit
+            </button>
+            <button className="questionnaire-nav-btn" onClick={handleStartOver} style={{ fontSize: '13px' }}>
+              Start over
             </button>
           </div>
         </div>
