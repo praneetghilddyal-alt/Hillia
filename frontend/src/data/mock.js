@@ -68,7 +68,7 @@ export const approachContent = {
 
 export const partnersContent = {
   title: 'Partners',
-  intro: 'Partners listed here are aligned with Hillia's approach to stewardship, discretion, and long-term community thinking. They are not engaged to promote, scale, or monetise the platform. They are present to help protect its intent.',
+  intro: "Partners listed here are aligned with Hillia's approach to stewardship, discretion, and long-term community thinking. They are not engaged to promote, scale, or monetise the platform. They are present to help protect its intent.",
   categories: [
     {
       title: 'Stewardship & Spatial Thinking',
