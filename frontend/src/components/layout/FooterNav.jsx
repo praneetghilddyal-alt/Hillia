@@ -18,9 +18,6 @@ const FooterNav = () => {
             key={link.path}
             to={link.path}
             className="footer-nav-link"
-            style={{
-              color: location.pathname === link.path ? 'var(--text-primary)' : undefined,
-            }}
           >
             {link.label}
           </Link>
