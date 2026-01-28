@@ -50,32 +50,31 @@ const HomePage = () => {
           transition: 'opacity 0.8s ease, transform 0.8s ease',
         }}
       >
-        {/* Hero Image Container - Clickable */}
+        {/* Hero Image - Invitation Card */}
+        <div className="hero-image-container ambient-motion">
+          <img
+            src="https://customer-assets.emergentagent.com/job_select-hills/artifacts/nglee2mg_file_00000000b4bc7209a16dfa79341267fb.png"
+            alt="HILLIA invitation"
+            className="hero-image"
+            style={{
+              objectFit: 'contain',
+              height: '400px',
+              width: 'auto',
+              maxWidth: '100%',
+            }}
+          />
+        </div>
+        
+        {/* Entry point */}
         <div 
-          className="hero-image-container ambient-motion invitation-clickable"
+          className="invitation-entry"
           onClick={handleEnter}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => e.key === 'Enter' && handleEnter()}
         >
-          <img
-            src="https://images.pexels.com/photos/7964976/pexels-photo-7964976.jpeg?auto=compress&cs=tinysrgb&w=1200"
-            alt="Weathered wood surface"
-            className="hero-image"
-            style={{
-              objectFit: 'cover',
-              height: '360px',
-            }}
-          />
-          {/* Invitation Card Overlay */}
-          <div className="invitation-overlay">
-            <div className="invitation-wordmark">{siteConfig.name}</div>
-            <div className="invitation-subtitle">{siteConfig.tagline}</div>
-          </div>
+          by invitation
         </div>
-        
-        {/* Microcopy beneath card */}
-        <div className="invitation-hint">Open the invitation</div>
 
         {/* Entry Text */}
         <div className="entry-text">
