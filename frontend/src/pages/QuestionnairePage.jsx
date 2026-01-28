@@ -225,7 +225,7 @@ const QuestionnairePage = () => {
               onClick={() => navigate('/philosophy')}
               style={{ fontSize: '13px' }}
             >
-              Return to site
+              Exit
             </button>
           </div>
         </div>
