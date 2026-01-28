@@ -46,18 +46,51 @@ security = HTTPBasic()
 ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'hillia_admin')
 ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH', hashlib.sha256('changeme'.encode()).hexdigest())
 
+# Rate limiting for admin auth (simple in-memory, resets on server restart)
+failed_attempts = {}
+MAX_FAILED_ATTEMPTS = 5
+LOCKOUT_DURATION = 300  # 5 minutes in seconds
+
 def verify_admin(credentials: HTTPBasicCredentials = Depends(security)):
-    """Verify admin credentials"""
+    """Verify admin credentials with rate limiting"""
+    client_key = credentials.username
+    current_time = datetime.now(timezone.utc).timestamp()
+    
+    # Check if locked out
+    if client_key in failed_attempts:
+        attempts, lockout_time = failed_attempts[client_key]
+        if attempts >= MAX_FAILED_ATTEMPTS:
+            if current_time - lockout_time < LOCKOUT_DURATION:
+                raise HTTPException(
+                    status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+                    detail="Too many failed attempts. Try again later.",
+                )
+            else:
+                # Reset after lockout period
+                del failed_attempts[client_key]
+    
     password_hash = hashlib.sha256(credentials.password.encode()).hexdigest()
     is_correct_username = secrets.compare_digest(credentials.username, ADMIN_USERNAME)
     is_correct_password = secrets.compare_digest(password_hash, ADMIN_PASSWORD_HASH)
     
     if not (is_correct_username and is_correct_password):
+        # Track failed attempt
+        if client_key in failed_attempts:
+            attempts, _ = failed_attempts[client_key]
+            failed_attempts[client_key] = (attempts + 1, current_time)
+        else:
+            failed_attempts[client_key] = (1, current_time)
+        
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials",
             headers={"WWW-Authenticate": "Basic"},
         )
+    
+    # Clear failed attempts on successful login
+    if client_key in failed_attempts:
+        del failed_attempts[client_key]
+    
     return credentials.username
 
 # ============================================
