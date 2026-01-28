@@ -410,6 +410,79 @@
   background: var(--bg-secondary);
 }
 
+/* Matrix Question Styles */
+.matrix-question {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.matrix-header {
+  display: grid;
+  grid-template-columns: 180px repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.matrix-col-header {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 8px 4px;
+}
+
+.matrix-row {
+  display: grid;
+  grid-template-columns: 180px repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.matrix-row-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-primary);
+  padding-right: 16px;
+}
+
+.matrix-cell {
+  display: flex;
+  justify-content: center;
+}
+
+.matrix-option {
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  cursor: pointer;
+}
+
+.matrix-option:hover {
+  border-color: var(--text-primary);
+}
+
+.matrix-option.selected {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+@media (max-width: 768px) {
+  .matrix-header,
+  .matrix-row {
+    grid-template-columns: 120px repeat(4, 1fr);
+  }
+  
+  .matrix-col-header {
+    font-size: 10px;
+  }
+  
+  .matrix-row-label {
+    font-size: 12px;
+  }
+}
+
 .questionnaire-nav {
   display: flex;
   gap: 24px;
