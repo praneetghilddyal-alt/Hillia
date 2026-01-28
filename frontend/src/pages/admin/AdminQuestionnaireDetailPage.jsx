@@ -52,6 +52,16 @@ const AdminQuestionnaireDetailPage = () => {
     }
   };
 
+  const toggleWatch = async () => {
+    if (!response) return;
+    try {
+      await updateQuestionnaireResponse(responseId, { watched: !response.watched });
+      setResponse({ ...response, watched: !response.watched });
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-IN', {
