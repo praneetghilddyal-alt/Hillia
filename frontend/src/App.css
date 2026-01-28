@@ -83,6 +83,23 @@
   opacity: 0.92;
 }
 
+/* Entry point - "by invitation" */
+.invitation-entry {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 28px;
+  margin-bottom: 48px;
+  cursor: default;
+}
+
+.invitation-entry:hover {
+  color: var(--text-primary);
+}
+
 /* Hint text beneath invitation */
 .invitation-hint {
   font-family: 'Inter', sans-serif;
