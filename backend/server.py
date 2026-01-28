@@ -207,8 +207,11 @@ async def submit_contact(data: ContactSubmissionCreate):
     
     submission = ContactSubmission(
         name=data.name,
-        city=data.city,
         reason=data.reason,
+        city=data.city,
+        preferred_contact=data.preferred_contact,
+        email=data.email,
+        phone=data.phone,
         consent=data.consent
     )
     
