@@ -50,8 +50,14 @@ const HomePage = () => {
           transition: 'opacity 0.8s ease, transform 0.8s ease',
         }}
       >
-        {/* Hero Image Container */}
-        <div className="hero-image-container ambient-motion">
+        {/* Hero Image Container - Clickable */}
+        <div 
+          className="hero-image-container ambient-motion invitation-clickable"
+          onClick={handleEnter}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && handleEnter()}
+        >
           <img
             src="https://images.pexels.com/photos/7964976/pexels-photo-7964976.jpeg?auto=compress&cs=tinysrgb&w=1200"
             alt="Weathered wood surface"
@@ -67,19 +73,15 @@ const HomePage = () => {
             <div className="invitation-subtitle">{siteConfig.tagline}</div>
           </div>
         </div>
+        
+        {/* Microcopy beneath card */}
+        <div className="invitation-hint">Open the invitation</div>
 
         {/* Entry Text */}
         <div className="entry-text">
           {homepageContent.entryText.map((text, index) => (
             <p key={index}>{text}</p>
           ))}
-          <button
-            className="entry-cta"
-            onClick={handleEnter}
-            aria-label="Enter site"
-          >
-            {homepageContent.ctaLabel}
-          </button>
         </div>
       </div>
     </div>
