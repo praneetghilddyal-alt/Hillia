@@ -131,8 +131,11 @@ class ContactSubmission(BaseModel):
     submission_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     name: str
-    city: str
     reason: str
+    city: Optional[str] = None
+    preferred_contact: Optional[str] = None
+    email: Optional[str] = None
+    phone: Optional[str] = None
     consent: bool = True
     status: ContactStatus = ContactStatus.NEW
     internal_notes: str = ""
