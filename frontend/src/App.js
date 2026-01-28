@@ -39,6 +39,7 @@ function App() {
           <Route path="/partners" element={<PartnersPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/founding-circle" element={<FoundingCirclePage />} />
         </Routes>
       </BrowserRouter>
     </div>
