@@ -128,7 +128,16 @@ const AdminQuestionnaireDetailPage = () => {
           <button onClick={() => navigate('/admin/questionnaire')} className="admin-back-btn">
             Back to List
           </button>
-          <h1 className="admin-page-title">Response Detail</h1>
+          <div className="admin-page-title-row">
+            <h1 className="admin-page-title">Response Detail</h1>
+            <button 
+              onClick={toggleWatch} 
+              className={`admin-watch-toggle ${response.watched ? 'admin-watch-toggle-active' : ''}`}
+              title={response.watched ? 'Remove from watch list' : 'Add to watch list'}
+            >
+              {response.watched ? '● Watching' : '○ Watch'}
+            </button>
+          </div>
           <p className="admin-page-intro">ID: {response.response_id}</p>
         </div>
 
