@@ -146,6 +146,7 @@ class QuestionnaireResponse(BaseModel):
     internal_score: InternalScore = Field(default_factory=InternalScore)
     internal_notes: str = ""
     status: ResponseStatus = ResponseStatus.UNREVIEWED
+    watched: bool = False  # Watch list feature
 
 class ContactSubmissionCreate(BaseModel):
     """Contact form submission from frontend"""
@@ -172,6 +173,7 @@ class ContactSubmission(BaseModel):
     consent: bool = True
     status: ContactStatus = ContactStatus.NEW
     internal_notes: str = ""
+    watched: bool = False  # Watch list feature
 
 class AnalyticsEvent(BaseModel):
     """Analytics event (consent-based)"""
