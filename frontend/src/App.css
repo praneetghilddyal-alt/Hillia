@@ -299,6 +299,28 @@
   resize: vertical;
 }
 
+/* Contact Options */
+.contact-options {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.contact-option {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-light);
+  padding: 12px 20px;
+  cursor: pointer;
+}
+
+.contact-option.selected {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
 /* Submit Button */
 .submit-btn {
   font-family: 'Inter', sans-serif;
