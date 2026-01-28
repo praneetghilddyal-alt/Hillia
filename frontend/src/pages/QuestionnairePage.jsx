@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { questionnaireContent, STORAGE_KEYS, siteConfig } from '../data/mock';
+import { submitQuestionnaire, trackEvent, EVENTS } from '../services/api';
 
 const QuestionnairePage = () => {
   const navigate = useNavigate();
