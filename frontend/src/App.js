@@ -11,6 +11,7 @@ import QuestionnairePage from './pages/QuestionnairePage';
 import PartnersPage from './pages/PartnersPage';
 import ContactPage from './pages/ContactPage';
 import PrivacyPage from './pages/PrivacyPage';
+import FoundingCirclePage from './pages/FoundingCirclePage';
 
 // Analytics placeholder (consent-ready)
 const initAnalytics = () => {
