@@ -1007,11 +1007,40 @@
   background-color: var(--bg-secondary);
 }
 
+.admin-list-item-watched {
+  border-left: 3px solid var(--text-primary);
+}
+
 .admin-list-item-main {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+}
+
+.admin-list-item-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-watch-btn {
+  font-size: 14px;
+  color: var(--text-light);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.admin-watch-btn:hover {
+  color: var(--text-primary);
+}
+
+.admin-watch-btn-active {
+  color: var(--text-primary);
 }
 
 .admin-list-item-id,
