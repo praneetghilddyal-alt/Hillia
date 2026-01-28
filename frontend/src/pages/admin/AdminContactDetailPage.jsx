@@ -104,7 +104,16 @@ const AdminContactDetailPage = () => {
           <button onClick={() => navigate('/admin/contact')} className="admin-back-btn">
             Back to List
           </button>
-          <h1 className="admin-page-title">Contact Detail</h1>
+          <div className="admin-page-title-row">
+            <h1 className="admin-page-title">Contact Detail</h1>
+            <button 
+              onClick={toggleWatch} 
+              className={`admin-watch-toggle ${submission.watched ? 'admin-watch-toggle-active' : ''}`}
+              title={submission.watched ? 'Remove from watch list' : 'Add to watch list'}
+            >
+              {submission.watched ? '● Watching' : '○ Watch'}
+            </button>
+          </div>
           <p className="admin-page-intro">ID: {submission.submission_id}</p>
         </div>
 
