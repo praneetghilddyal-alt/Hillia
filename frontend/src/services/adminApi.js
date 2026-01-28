@@ -107,10 +107,13 @@ export const getAdminStats = async () => {
 /**
  * Get questionnaire responses
  */
-export const getQuestionnaireResponses = async (status = null, limit = 50, skip = 0) => {
+export const getQuestionnaireResponses = async (status = null, watched = null, limit = 50, skip = 0) => {
   let endpoint = `/admin/questionnaire?limit=${limit}&skip=${skip}`;
   if (status) {
     endpoint += `&status=${status}`;
+  }
+  if (watched !== null) {
+    endpoint += `&watched=${watched}`;
   }
   return adminFetch(endpoint);
 };
@@ -123,12 +126,13 @@ export const getQuestionnaireResponse = async (responseId) => {
 };
 
 /**
- * Update questionnaire response (notes, status)
+ * Update questionnaire response (notes, status, watched)
  */
 export const updateQuestionnaireResponse = async (responseId, updates) => {
   const params = new URLSearchParams();
   if (updates.status) params.append('status', updates.status);
   if (updates.internal_notes !== undefined) params.append('internal_notes', updates.internal_notes);
+  if (updates.watched !== undefined) params.append('watched', updates.watched);
   
   return adminFetch(`/admin/questionnaire/${responseId}?${params}`, {
     method: 'PATCH',
@@ -138,10 +142,13 @@ export const updateQuestionnaireResponse = async (responseId, updates) => {
 /**
  * Get contact submissions
  */
-export const getContactSubmissions = async (status = null, limit = 50, skip = 0) => {
+export const getContactSubmissions = async (status = null, watched = null, limit = 50, skip = 0) => {
   let endpoint = `/admin/contact?limit=${limit}&skip=${skip}`;
   if (status) {
     endpoint += `&status=${status}`;
+  }
+  if (watched !== null) {
+    endpoint += `&watched=${watched}`;
   }
   return adminFetch(endpoint);
 };
@@ -154,12 +161,13 @@ export const getContactSubmission = async (submissionId) => {
 };
 
 /**
- * Update contact submission (notes, status)
+ * Update contact submission (notes, status, watched)
  */
 export const updateContactSubmission = async (submissionId, updates) => {
   const params = new URLSearchParams();
   if (updates.status) params.append('status', updates.status);
   if (updates.internal_notes !== undefined) params.append('internal_notes', updates.internal_notes);
+  if (updates.watched !== undefined) params.append('watched', updates.watched);
   
   return adminFetch(`/admin/contact/${submissionId}?${params}`, {
     method: 'PATCH',
