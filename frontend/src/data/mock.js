@@ -478,6 +478,7 @@ export const navigationLinks = [
   { label: 'Approach', path: '/approach' },
   { label: 'Community', path: '/community' },
   { label: 'Questionnaire', path: '/questionnaire' },
+  { label: 'Founding Circle', path: '/founding-circle' },
   { label: 'Partners', path: '/partners' },
   { label: 'Contact', path: '/contact' },
 ];
