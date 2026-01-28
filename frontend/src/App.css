@@ -857,6 +857,40 @@
   margin: 0 0 12px 0;
 }
 
+.admin-page-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-page-title-row .admin-page-title {
+  margin: 0;
+}
+
+.admin-watch-toggle {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--text-light);
+  background: none;
+  border: 1px solid var(--border-light);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.admin-watch-toggle:hover {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+}
+
+.admin-watch-toggle-active {
+  border-color: var(--text-primary);
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
 .admin-page-intro {
   font-family: 'Inter', sans-serif;
   font-size: 14px;
