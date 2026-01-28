@@ -6,6 +6,8 @@ import { trackEvent, EVENTS } from '../services/api';
 const HomePage = () => {
   const [hasEntered, setHasEntered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,6 +15,12 @@ const HomePage = () => {
     const entered = localStorage.getItem(STORAGE_KEYS.HAS_ENTERED);
     if (entered === 'true') {
       setHasEntered(true);
+    }
+
+    // Check if user has interacted before
+    const interacted = sessionStorage.getItem('hillia_interacted');
+    if (interacted === 'true') {
+      setHasInteracted(true);
     }
 
     // Track homepage view
@@ -36,6 +44,13 @@ const HomePage = () => {
     };
   }, [hasEntered]);
 
+  const handleInteraction = () => {
+    if (!hasInteracted) {
+      setHasInteracted(true);
+      sessionStorage.setItem('hillia_interacted', 'true');
+    }
+  };
+
   const handleEnter = () => {
     // Track invitation opened
     trackEvent(EVENTS.INVITATION_OPENED);
@@ -47,6 +62,9 @@ const HomePage = () => {
       navigate('/philosophy');
     }, 200);
   };
+
+  // Show microcopy on hover OR on first tap (mobile), hide after interaction
+  const showMicrocopy = !hasInteracted && isHovered;
 
   return (
     <div className="threshold">
@@ -63,6 +81,9 @@ const HomePage = () => {
         <div 
           className="invitation-card-entry"
           onClick={handleEnter}
+          onMouseEnter={() => { setIsHovered(true); handleInteraction(); }}
+          onMouseLeave={() => setIsHovered(false)}
+          onTouchStart={handleInteraction}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => e.key === 'Enter' && handleEnter()}
@@ -75,8 +96,14 @@ const HomePage = () => {
           />
         </div>
         
-        {/* Orientation microcopy - NOT clickable */}
-        <div className="invitation-microcopy">
+        {/* Orientation microcopy - appears on hover, very low contrast, disappears after interaction */}
+        <div 
+          className="invitation-microcopy-hover"
+          style={{
+            opacity: showMicrocopy ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+          }}
+        >
           Open the invitation
         </div>
       </div>
