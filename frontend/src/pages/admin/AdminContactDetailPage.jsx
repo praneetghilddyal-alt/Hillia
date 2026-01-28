@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getContactSubmission, updateContactSubmission } from '../../services/adminApi';
@@ -17,11 +17,7 @@ const AdminContactDetailPage = () => {
   const [notes, setNotes] = useState('');
   const [status, setStatus] = useState('');
 
-  useEffect(() => {
-    loadSubmission();
-  }, [submissionId]);
-
-  const loadSubmission = async () => {
+  const loadSubmission = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getContactSubmission(submissionId);
@@ -33,7 +29,11 @@ const AdminContactDetailPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [submissionId]);
+
+  useEffect(() => {
+    loadSubmission();
+  }, [loadSubmission]);
 
   const handleSave = async () => {
     try {

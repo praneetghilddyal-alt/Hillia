@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getQuestionnaireResponse, updateQuestionnaireResponse } from '../../services/adminApi';
@@ -18,11 +18,7 @@ const AdminQuestionnaireDetailPage = () => {
   const [notes, setNotes] = useState('');
   const [status, setStatus] = useState('');
 
-  useEffect(() => {
-    loadResponse();
-  }, [responseId]);
-
-  const loadResponse = async () => {
+  const loadResponse = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getQuestionnaireResponse(responseId);
@@ -34,7 +30,11 @@ const AdminQuestionnaireDetailPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [responseId]);
+
+  useEffect(() => {
+    loadResponse();
+  }, [loadResponse]);
 
   const handleSave = async () => {
     try {

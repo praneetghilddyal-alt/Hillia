@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { getContactSubmissions } from '../../services/adminApi';
@@ -14,11 +14,7 @@ const AdminContactListPage = () => {
   const [error, setError] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
 
-  useEffect(() => {
-    loadSubmissions();
-  }, [statusFilter]);
-
-  const loadSubmissions = async () => {
+  const loadSubmissions = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getContactSubmissions(statusFilter || null);
@@ -28,7 +24,11 @@ const AdminContactListPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [statusFilter]);
+
+  useEffect(() => {
+    loadSubmissions();
+  }, [loadSubmissions]);
 
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
