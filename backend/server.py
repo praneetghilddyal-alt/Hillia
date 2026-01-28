@@ -117,8 +117,11 @@ class QuestionnaireResponse(BaseModel):
 class ContactSubmissionCreate(BaseModel):
     """Contact form submission from frontend"""
     name: str
-    city: str
     reason: str
+    city: Optional[str] = None  # Optional now
+    preferred_contact: Optional[str] = None  # '', 'email', 'phone'
+    email: Optional[str] = None
+    phone: Optional[str] = None
     consent: bool = True
 
 class ContactSubmission(BaseModel):
