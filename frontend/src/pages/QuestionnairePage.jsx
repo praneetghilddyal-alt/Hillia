@@ -151,6 +151,8 @@ const QuestionnairePage = () => {
 
   const handleBegin = () => {
     setShowLanding(false);
+    // Track questionnaire started
+    trackEvent(EVENTS.QUESTIONNAIRE_STARTED);
   };
 
   const handleContactChoice = (wants) => {
@@ -168,7 +170,35 @@ const QuestionnairePage = () => {
     saveResponses(newResponses);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    // Prepare data for backend
+    const sections = {};
+    const freeText = {};
+    
+    questionnaireContent.sections.forEach(section => {
+      sections[section.id] = {};
+      section.questions.forEach(q => {
+        if (responses[q.id]) {
+          if (q.type === 'text') {
+            freeText[q.id] = responses[q.id];
+          } else {
+            sections[section.id][q.id] = responses[q.id];
+          }
+        }
+      });
+    });
+
+    // Submit to backend
+    await submitQuestionnaire({
+      sections,
+      free_text: freeText,
+      contact_info: wantsContact ? contactInfo : null,
+      wants_contact: wantsContact,
+    });
+
+    // Track completion
+    trackEvent(EVENTS.QUESTIONNAIRE_COMPLETED);
+
     setIsCompleted(true);
     saveProgress(currentSectionIndex, currentQuestionIndex, true, false);
   };
