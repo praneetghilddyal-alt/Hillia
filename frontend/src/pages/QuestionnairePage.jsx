@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { questionnaireContent, STORAGE_KEYS, siteConfig } from '../data/mock';
 import { submitQuestionnaire, trackEvent, EVENTS } from '../services/api';
 
 const QuestionnairePage = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [isVisible, setIsVisible] = useState(false);
   const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -31,6 +32,15 @@ const QuestionnairePage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     const timer = setTimeout(() => setIsVisible(true), 100);
+
+    // Check for reset parameter
+    if (searchParams.get('reset') === 'true') {
+      localStorage.removeItem(STORAGE_KEYS.QUESTIONNAIRE_RESPONSES);
+      localStorage.removeItem(STORAGE_KEYS.QUESTIONNAIRE_PROGRESS);
+      // Remove the reset param from URL
+      navigate('/questionnaire', { replace: true });
+      return () => clearTimeout(timer);
+    }
 
     // Load saved progress
     const savedResponses = localStorage.getItem(STORAGE_KEYS.QUESTIONNAIRE_RESPONSES);
