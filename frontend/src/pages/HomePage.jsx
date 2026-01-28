@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { STORAGE_KEYS } from '../data/mock';
+import { trackEvent, EVENTS } from '../services/api';
 
 const HomePage = () => {
   const [hasEntered, setHasEntered] = useState(false);
@@ -13,6 +14,9 @@ const HomePage = () => {
     if (entered === 'true') {
       setHasEntered(true);
     }
+
+    // Track homepage view
+    trackEvent(EVENTS.HOMEPAGE_ENTRY);
 
     // Fade in
     const timer = setTimeout(() => setIsVisible(true), 100);
@@ -33,6 +37,9 @@ const HomePage = () => {
   }, [hasEntered]);
 
   const handleEnter = () => {
+    // Track invitation opened
+    trackEvent(EVENTS.INVITATION_OPENED);
+    
     localStorage.setItem(STORAGE_KEYS.HAS_ENTERED, 'true');
     setHasEntered(true);
     // Navigate to philosophy page after entry
