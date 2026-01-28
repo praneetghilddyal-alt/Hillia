@@ -68,21 +68,31 @@ export const approachContent = {
 
 export const partnersContent = {
   title: 'Partners',
-  intro: 'Those we work with.',
-  partners: [
+  intro: 'Partners listed here are aligned with Hillia's approach to stewardship, discretion, and long-term community thinking. They are not engaged to promote, scale, or monetise the platform. They are present to help protect its intent.',
+  categories: [
     {
-      name: 'Architectural Advisors',
-      role: 'Design guidance for terrain-sensitive construction',
+      title: 'Stewardship & Spatial Thinking',
+      description: 'Individuals and practices aligned on restraint in hillside development, long-term spatial coherence, and building only what can age quietly.',
+      disclaimer: 'Not involved in sales, marketing, or volume-led expansion.',
     },
     {
-      name: 'Land Consultants',
-      role: 'Due diligence and regulatory navigation',
+      title: 'Operations & Long-Term Care',
+      description: 'Partners aligned on maintenance standards, shared infrastructure discipline, and the long view of how communities function over decades.',
+      disclaimer: 'Not involved in short-term optimisation or yield-driven decisions.',
     },
     {
-      name: 'Stewardship Services',
-      role: 'Ongoing property care and estate management',
+      title: 'Legal, Governance & Process',
+      description: 'Advisors aligned on clean title, transparent structuring, and decision-making frameworks that privilege clarity over speed.',
+      disclaimer: 'Not involved in deal sourcing or brokerage.',
+    },
+    {
+      title: 'Cultural & Community Alignment',
+      description: 'Individuals aligned on the belief that community quality is shaped as much by behaviour as by architecture.',
+      disclaimer: 'Not involved in screening individuals; alignment is assessed holistically.',
     },
   ],
+  independenceClause: 'Partners operate independently and are listed here solely to reflect alignment of values and responsibility, not endorsement or affiliation.',
+  closing: 'Hillia remains accountable for all decisions.',
 };
 
 export const contactContent = {
