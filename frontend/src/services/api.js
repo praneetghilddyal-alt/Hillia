@@ -66,8 +66,11 @@ export const submitContact = async (data) => {
       },
       body: JSON.stringify({
         name: data.name,
-        city: data.city,
         reason: data.reason,
+        city: data.city || null,
+        preferred_contact: data.preferred_contact || null,
+        email: data.email || null,
+        phone: data.phone || null,
         consent: true,
       }),
     });
