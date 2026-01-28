@@ -11,7 +11,6 @@ import QuestionnairePage from './pages/QuestionnairePage';
 import PartnersPage from './pages/PartnersPage';
 import ContactPage from './pages/ContactPage';
 import PrivacyPage from './pages/PrivacyPage';
-import FoundingCirclePage from './pages/FoundingCirclePage';
 
 // Analytics placeholder (consent-ready)
 const initAnalytics = () => {
@@ -19,8 +18,6 @@ const initAnalytics = () => {
   // Will be activated post soft-launch with tracking IDs
   if (typeof window !== 'undefined') {
     window.dataLayer = window.dataLayer || [];
-    // gtag placeholder - uncomment and add ID when ready
-    // window.gtag = function() { window.dataLayer.push(arguments); };
   }
 };
 
@@ -41,7 +38,6 @@ function App() {
           <Route path="/partners" element={<PartnersPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/founding-circle" element={<FoundingCirclePage />} />
         </Routes>
       </BrowserRouter>
     </div>
