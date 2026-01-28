@@ -24,17 +24,43 @@ const PartnersPage = () => {
       >
         <header className="page-header">
           <h1 className="page-title">{partnersContent.title}</h1>
-          <p className="page-intro">{partnersContent.intro}</p>
+          <p className="page-intro" style={{ lineHeight: '1.9' }}>
+            {partnersContent.intro}
+          </p>
         </header>
 
-        <div className="partners-list">
-          {partnersContent.partners.map((partner, index) => (
-            <div key={index} className="partner-item">
-              <h3 className="partner-name">{partner.name}</h3>
-              <p className="partner-role">{partner.role}</p>
+        <div className="partners-categories">
+          {partnersContent.categories.map((category, index) => (
+            <div key={index} className="partner-category">
+              <h2 className="partner-category-title">{category.title}</h2>
+              <p className="partner-category-description">{category.description}</p>
+              <p className="partner-category-disclaimer">{category.disclaimer}</p>
             </div>
           ))}
         </div>
+
+        <div className="section-divider" style={{ margin: '60px 0' }} />
+
+        <p
+          style={{
+            fontSize: '13px',
+            color: 'var(--text-secondary)',
+            lineHeight: '1.8',
+            marginBottom: '24px',
+          }}
+        >
+          {partnersContent.independenceClause}
+        </p>
+
+        <p
+          style={{
+            fontSize: '14px',
+            color: 'var(--text-primary)',
+            lineHeight: '1.8',
+          }}
+        >
+          {partnersContent.closing}
+        </p>
       </div>
       <FooterNav />
     </div>
