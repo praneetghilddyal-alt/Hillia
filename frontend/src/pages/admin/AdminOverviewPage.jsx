@@ -83,6 +83,14 @@ const AdminOverviewPage = () => {
             </div>
             <div className="admin-stats-divider" />
             <div className="admin-stats-row">
+              <span className="admin-stats-label">Watching</span>
+              <span className="admin-stats-value">
+                {stats.questionnaire.watched.count}
+                <span className="admin-stats-pct">({stats.questionnaire.watched.percentage}%)</span>
+              </span>
+            </div>
+            <div className="admin-stats-divider" />
+            <div className="admin-stats-row">
               <span className="admin-stats-label">Consented to Contact</span>
               <span className="admin-stats-value">
                 {stats.questionnaire.contact_consent.yes.count}
@@ -126,6 +134,14 @@ const AdminOverviewPage = () => {
               <span className="admin-stats-value">
                 {stats.contact.by_status.archived.count}
                 <span className="admin-stats-pct">({stats.contact.by_status.archived.percentage}%)</span>
+              </span>
+            </div>
+            <div className="admin-stats-divider" />
+            <div className="admin-stats-row">
+              <span className="admin-stats-label">Watching</span>
+              <span className="admin-stats-value">
+                {stats.contact.watched.count}
+                <span className="admin-stats-pct">({stats.contact.watched.percentage}%)</span>
               </span>
             </div>
           </div>
