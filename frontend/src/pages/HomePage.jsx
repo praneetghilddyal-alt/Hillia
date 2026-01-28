@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { homepageContent, siteConfig, STORAGE_KEYS } from '../data/mock';
+import { STORAGE_KEYS } from '../data/mock';
 
 const HomePage = () => {
   const [hasEntered, setHasEntered] = useState(false);
@@ -14,7 +14,7 @@ const HomePage = () => {
       setHasEntered(true);
     }
 
-    // Fade in animation
+    // Fade in
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);
   }, []);
@@ -38,7 +38,7 @@ const HomePage = () => {
     // Navigate to philosophy page after entry
     setTimeout(() => {
       navigate('/philosophy');
-    }, 300);
+    }, 200);
   };
 
   return (
@@ -46,41 +46,31 @@ const HomePage = () => {
       <div
         style={{
           opacity: isVisible ? 1 : 0,
-          transform: isVisible ? 'translateY(0)' : 'translateY(20px)',
-          transition: 'opacity 0.8s ease, transform 0.8s ease',
+          transition: 'opacity 0.6s ease',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
         }}
       >
-        {/* Hero Image - Invitation Card */}
-        <div className="hero-image-container ambient-motion">
-          <img
-            src="https://customer-assets.emergentagent.com/job_select-hills/artifacts/nglee2mg_file_00000000b4bc7209a16dfa79341267fb.png"
-            alt="HILLIA invitation"
-            className="hero-image"
-            style={{
-              objectFit: 'contain',
-              height: '400px',
-              width: 'auto',
-              maxWidth: '100%',
-            }}
-          />
-        </div>
-        
-        {/* Entry point */}
+        {/* Invitation Card - Sole clickable element */}
         <div 
-          className="invitation-entry"
+          className="invitation-card-entry"
           onClick={handleEnter}
           role="button"
           tabIndex={0}
           onKeyDown={(e) => e.key === 'Enter' && handleEnter()}
+          aria-label="Open the invitation"
         >
-          by invitation
+          <img
+            src="https://customer-assets.emergentagent.com/job_select-hills/artifacts/nglee2mg_file_00000000b4bc7209a16dfa79341267fb.png"
+            alt="HILLIA invitation"
+            className="invitation-card-image"
+          />
         </div>
-
-        {/* Entry Text */}
-        <div className="entry-text">
-          {homepageContent.entryText.map((text, index) => (
-            <p key={index}>{text}</p>
-          ))}
+        
+        {/* Orientation microcopy - NOT clickable */}
+        <div className="invitation-microcopy">
+          Open the invitation
         </div>
       </div>
     </div>
