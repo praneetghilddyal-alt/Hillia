@@ -94,7 +94,7 @@
   margin-bottom: 48px;
 }
 
-/* Entry CTA */
+/* Entry CTA - Intentionally minimal, no affordance signals */
 .entry-cta {
   font-family: 'Inter', sans-serif;
   font-size: 13px;
@@ -103,25 +103,8 @@
   color: var(--text-primary);
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: default;
   padding: 12px 0;
-  position: relative;
-  transition: opacity 0.3s ease;
-}
-
-.entry-cta::after {
-  content: '';
-  position: absolute;
-  bottom: 8px;
-  left: 0;
-  width: 0;
-  height: 1px;
-  background: var(--text-primary);
-  transition: width 0.4s ease;
-}
-
-.entry-cta:hover::after {
-  width: 100%;
 }
 
 /* Page Layout */
