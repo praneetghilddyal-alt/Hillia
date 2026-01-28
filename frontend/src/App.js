@@ -11,6 +11,7 @@ import QuestionnairePage from './pages/QuestionnairePage';
 import PartnersPage from './pages/PartnersPage';
 import ContactPage from './pages/ContactPage';
 import PrivacyPage from './pages/PrivacyPage';
+import FoundingCirclePage from './pages/FoundingCirclePage';
 
 // Analytics placeholder (consent-ready)
 const initAnalytics = () => {
@@ -40,6 +41,7 @@ function App() {
           <Route path="/partners" element={<PartnersPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/founding-circle" element={<FoundingCirclePage />} />
         </Routes>
       </BrowserRouter>
     </div>
