@@ -177,7 +177,7 @@ const QuestionnairePage = () => {
             This questionnaire will take approximately 5-7 minutes. Your responses are saved automatically. You may return to complete it later.
           </p>
 
-          <button className="submit-btn" onClick={handleBegin}>
+          <button className="entry-cta" onClick={handleBegin}>
             Begin
           </button>
         </div>
