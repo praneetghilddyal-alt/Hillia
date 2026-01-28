@@ -83,6 +83,7 @@ HILLIA is an invitation-only branded villa community platform for Uttarakhand, I
   - [x] Questionnaire response viewing + notes + status
   - [x] Contact submission viewing + notes + status
   - [x] Status workflow: unreviewed → reviewed → archived
+  - [x] **Watch List feature** - bookmark submissions for follow-up without changing status
 
 ## P1 - Next Tasks
 - [ ] Manual scoring logic (Low/Medium/High for community_fit, lifestyle_alignment, decision_maturity)
