@@ -10,6 +10,9 @@ const QuestionnairePage = () => {
   const [responses, setResponses] = useState({});
   const [isCompleted, setIsCompleted] = useState(false);
   const [showLanding, setShowLanding] = useState(true);
+  const [showContactCapture, setShowContactCapture] = useState(false);
+  const [wantsContact, setWantsContact] = useState(null);
+  const [contactInfo, setContactInfo] = useState({ name: '', email: '', mobile: '' });
 
   // Calculate all questions flat
   const allQuestions = questionnaireContent.sections.flatMap((section) =>
@@ -24,7 +27,10 @@ const QuestionnairePage = () => {
   const currentSection = questionnaireContent.sections[currentSectionIndex];
   const currentQuestion = currentSection?.questions[currentQuestionIndex];
 
-  const progress = isCompleted ? 100 : ((currentFlatIndex) / totalQuestions) * 100;
+  // Progress includes contact capture step
+  const totalSteps = totalQuestions + 1;
+  const currentStep = showContactCapture ? totalQuestions : currentFlatIndex;
+  const progress = isCompleted ? 100 : (currentStep / totalSteps) * 100;
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -35,12 +41,22 @@ const QuestionnairePage = () => {
     const savedProgress = localStorage.getItem(STORAGE_KEYS.QUESTIONNAIRE_PROGRESS);
 
     if (savedResponses) {
-      setResponses(JSON.parse(savedResponses));
+      const parsed = JSON.parse(savedResponses);
+      setResponses(parsed);
+      if (parsed.contactInfo) {
+        setContactInfo(parsed.contactInfo);
+      }
+      if (parsed.wantsContact !== undefined) {
+        setWantsContact(parsed.wantsContact);
+      }
     }
     if (savedProgress) {
-      const { sectionIndex, questionIndex, completed } = JSON.parse(savedProgress);
+      const { sectionIndex, questionIndex, completed, atContactCapture } = JSON.parse(savedProgress);
       if (completed) {
         setIsCompleted(true);
+        setShowLanding(false);
+      } else if (atContactCapture) {
+        setShowContactCapture(true);
         setShowLanding(false);
       } else if (sectionIndex !== undefined) {
         setCurrentSectionIndex(sectionIndex);
@@ -51,13 +67,14 @@ const QuestionnairePage = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const saveProgress = useCallback((sectionIdx, questionIdx, completed = false) => {
+  const saveProgress = useCallback((sectionIdx, questionIdx, completed = false, atContactCapture = false) => {
     localStorage.setItem(
       STORAGE_KEYS.QUESTIONNAIRE_PROGRESS,
       JSON.stringify({
         sectionIndex: sectionIdx,
         questionIndex: questionIdx,
         completed,
+        atContactCapture,
       })
     );
   }, []);
@@ -93,9 +110,9 @@ const QuestionnairePage = () => {
 
     if (isLastQuestionInSection) {
       if (isLastSection) {
-        // Complete questionnaire
-        setIsCompleted(true);
-        saveProgress(currentSectionIndex, currentQuestionIndex, true);
+        // Go to contact capture instead of completing
+        setShowContactCapture(true);
+        saveProgress(currentSectionIndex, currentQuestionIndex, false, true);
       } else {
         // Move to next section
         setCurrentSectionIndex((prev) => prev + 1);
@@ -110,6 +127,16 @@ const QuestionnairePage = () => {
   };
 
   const handleBack = () => {
+    if (showContactCapture) {
+      // Go back to last question
+      setShowContactCapture(false);
+      const lastSection = questionnaireContent.sections[questionnaireContent.sections.length - 1];
+      setCurrentSectionIndex(questionnaireContent.sections.length - 1);
+      setCurrentQuestionIndex(lastSection.questions.length - 1);
+      saveProgress(questionnaireContent.sections.length - 1, lastSection.questions.length - 1);
+      return;
+    }
+
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex((prev) => prev - 1);
       saveProgress(currentSectionIndex, currentQuestionIndex - 1);
@@ -125,8 +152,32 @@ const QuestionnairePage = () => {
     setShowLanding(false);
   };
 
-  const canGoBack = currentSectionIndex > 0 || currentQuestionIndex > 0;
+  const handleContactChoice = (wants) => {
+    setWantsContact(wants);
+    const newResponses = { ...responses, wantsContact: wants };
+    setResponses(newResponses);
+    saveResponses(newResponses);
+  };
+
+  const handleContactInfoChange = (field, value) => {
+    const newContactInfo = { ...contactInfo, [field]: value };
+    setContactInfo(newContactInfo);
+    const newResponses = { ...responses, contactInfo: newContactInfo };
+    setResponses(newResponses);
+    saveResponses(newResponses);
+  };
+
+  const handleSubmit = () => {
+    setIsCompleted(true);
+    saveProgress(currentSectionIndex, currentQuestionIndex, true, false);
+  };
+
+  const canGoBack = currentSectionIndex > 0 || currentQuestionIndex > 0 || showContactCapture;
   const hasCurrentResponse = responses[currentQuestion?.id];
+
+  // Can submit if: chose anonymous OR provided at least name and email
+  const canSubmit = wantsContact === false || 
+    (wantsContact === true && contactInfo.name && contactInfo.email);
 
   // Landing screen
   if (showLanding && !isCompleted) {
@@ -216,7 +267,10 @@ const QuestionnairePage = () => {
               maxWidth: '480px',
             }}
           >
-            {questionnaireContent.completion.message}
+            {wantsContact 
+              ? questionnaireContent.completion.message
+              : 'Your anonymous responses have been received.'
+            }
           </p>
 
           <div style={{ marginTop: '60px' }}>
@@ -227,6 +281,159 @@ const QuestionnairePage = () => {
             >
               Exit
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Contact capture screen
+  if (showContactCapture) {
+    return (
+      <div className="page">
+        <div className="questionnaire-progress">
+          <div
+            className="questionnaire-progress-bar"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        <div
+          className="questionnaire-section"
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transition: 'opacity 0.4s ease',
+            maxWidth: '720px',
+            margin: '0 auto',
+          }}
+        >
+          <div
+            style={{
+              marginBottom: '32px',
+              fontSize: '12px',
+              color: 'var(--text-light)',
+              letterSpacing: '0.05em',
+            }}
+          >
+            Contact
+          </div>
+
+          {wantsContact === null ? (
+            <>
+              <h2 className="questionnaire-question">
+                If you wish to be contacted, please allow data capture and give your permission.
+              </h2>
+              <p
+                style={{
+                  fontSize: '14px',
+                  color: 'var(--text-secondary)',
+                  lineHeight: '1.8',
+                  marginBottom: '48px',
+                  maxWidth: '520px',
+                }}
+              >
+                Otherwise, your responses remain anonymous.
+              </p>
+
+              <div className="questionnaire-options">
+                <button
+                  className="questionnaire-option"
+                  onClick={() => handleContactChoice(true)}
+                >
+                  I consent to being contacted
+                </button>
+                <button
+                  className="questionnaire-option"
+                  onClick={() => handleContactChoice(false)}
+                >
+                  Remain anonymous
+                </button>
+              </div>
+            </>
+          ) : wantsContact === false ? (
+            <>
+              <h2 className="questionnaire-question">
+                Your responses will be submitted anonymously.
+              </h2>
+
+              <div style={{ marginTop: '48px' }}>
+                <button
+                  className="submit-btn"
+                  onClick={handleSubmit}
+                >
+                  Submit
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h2 className="questionnaire-question">
+                Your details
+              </h2>
+
+              <div style={{ maxWidth: '400px' }}>
+                <div className="form-group">
+                  <label className="form-label" htmlFor="contact-name">Name</label>
+                  <input
+                    type="text"
+                    id="contact-name"
+                    className="form-input"
+                    value={contactInfo.name}
+                    onChange={(e) => handleContactInfoChange('name', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" htmlFor="contact-email">Email</label>
+                  <input
+                    type="email"
+                    id="contact-email"
+                    className="form-input"
+                    value={contactInfo.email}
+                    onChange={(e) => handleContactInfoChange('email', e.target.value)}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label" htmlFor="contact-mobile">Mobile</label>
+                  <input
+                    type="tel"
+                    id="contact-mobile"
+                    className="form-input"
+                    value={contactInfo.mobile}
+                    onChange={(e) => handleContactInfoChange('mobile', e.target.value)}
+                  />
+                </div>
+
+                <div style={{ marginTop: '48px' }}>
+                  <button
+                    className="submit-btn"
+                    onClick={handleSubmit}
+                    disabled={!canSubmit}
+                  >
+                    Submit
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          <div className="questionnaire-nav">
+            <button
+              className="questionnaire-nav-btn"
+              onClick={handleBack}
+            >
+              Back
+            </button>
+
+            {wantsContact !== null && wantsContact === true && (
+              <button
+                className="questionnaire-nav-btn"
+                onClick={() => setWantsContact(null)}
+              >
+                Change choice
+              </button>
+            )}
           </div>
         </div>
       </div>
