@@ -56,10 +56,12 @@ HILLIA is an invitation-only branded villa community platform for Uttarakhand, I
 - `DELETE /api/admin/contact/:id` - Hard delete (GDPR)
 
 ## Admin Credentials
-- Username: `hillia_admin`
-- Password: `HilliaAdmin2024`
-- Auth: HTTP Basic + SHA256 password hash
-- Rate Limiting: 5 failed attempts = 5 minute lockout
+- **No default credentials in codebase** (security requirement)
+- Admin credentials must be set via environment variables:
+  - `ADMIN_USERNAME` — Set by owner
+  - `ADMIN_PASSWORD_HASH` — SHA256 hash of password, set by owner
+- Generate hash: `python3 -c "import hashlib; print(hashlib.sha256('YOUR_PASSWORD'.encode()).hexdigest())"`
+- **No password recovery** — intentional; reset via environment variable if forgotten
 
 ## Database Collections
 - `questionnaire_responses` - Questionnaire submissions with internal notes/scores
