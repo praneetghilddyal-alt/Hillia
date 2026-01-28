@@ -51,6 +51,16 @@ const AdminContactDetailPage = () => {
     }
   };
 
+  const toggleWatch = async () => {
+    if (!submission) return;
+    try {
+      await updateContactSubmission(submissionId, { watched: !submission.watched });
+      setSubmission({ ...submission, watched: !submission.watched });
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const formatDate = (timestamp) => {
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-IN', {
