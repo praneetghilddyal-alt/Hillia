@@ -42,9 +42,9 @@ api_router = APIRouter(prefix="/api")
 # Basic auth for admin endpoints
 security = HTTPBasic()
 
-# Admin credentials (in production, use proper auth)
-ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME', 'hillia_admin')
-ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH', hashlib.sha256('changeme'.encode()).hexdigest())
+# Admin credentials (in production, set via environment variables - NO DEFAULTS)
+ADMIN_USERNAME = os.environ.get('ADMIN_USERNAME')
+ADMIN_PASSWORD_HASH = os.environ.get('ADMIN_PASSWORD_HASH')
 
 # Rate limiting for admin auth (simple in-memory, resets on server restart)
 failed_attempts = {}
@@ -53,6 +53,13 @@ LOCKOUT_DURATION = 300  # 5 minutes in seconds
 
 def verify_admin(credentials: HTTPBasicCredentials = Depends(security)):
     """Verify admin credentials with rate limiting"""
+    # Reject if admin credentials not configured
+    if not ADMIN_USERNAME or not ADMIN_PASSWORD_HASH:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Admin not configured",
+        )
+    
     client_key = credentials.username
     current_time = datetime.now(timezone.utc).timestamp()
     
