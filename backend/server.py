@@ -389,6 +389,69 @@ async def delete_contact_submission(submission_id: str, admin: str = Depends(ver
     
     return {"status": "deleted", "submission_id": submission_id}
 
+@api_router.get("/admin/contact/{submission_id}", response_model=ContactSubmission)
+async def get_contact_submission(submission_id: str, admin: str = Depends(verify_admin)):
+    """Admin: Get single contact submission"""
+    submission = await db.contact_submissions.find_one({"submission_id": submission_id}, {"_id": 0})
+    
+    if not submission:
+        raise HTTPException(status_code=404, detail="Submission not found")
+    
+    if isinstance(submission.get('timestamp'), str):
+        submission['timestamp'] = datetime.fromisoformat(submission['timestamp'])
+    
+    return submission
+
+@api_router.get("/admin/stats")
+async def get_admin_stats(admin: str = Depends(verify_admin)):
+    """Admin: Get aggregated statistics (counts and percentages only)"""
+    # Questionnaire counts by status
+    questionnaire_total = await db.questionnaire_responses.count_documents({})
+    questionnaire_unreviewed = await db.questionnaire_responses.count_documents({"status": "unreviewed"})
+    questionnaire_reviewed = await db.questionnaire_responses.count_documents({"status": "reviewed"})
+    questionnaire_archived = await db.questionnaire_responses.count_documents({"status": "archived"})
+    
+    # Contact submission counts by status
+    contact_total = await db.contact_submissions.count_documents({})
+    contact_new = await db.contact_submissions.count_documents({"status": "new"})
+    contact_reviewed = await db.contact_submissions.count_documents({"status": "reviewed"})
+    contact_archived = await db.contact_submissions.count_documents({"status": "archived"})
+    
+    # Questionnaire responses wanting contact
+    wants_contact_yes = await db.questionnaire_responses.count_documents({"wants_contact": True})
+    wants_contact_no = await db.questionnaire_responses.count_documents({"wants_contact": False})
+    
+    def pct(part, total):
+        return round((part / total * 100), 1) if total > 0 else 0
+    
+    return {
+        "questionnaire": {
+            "total": questionnaire_total,
+            "by_status": {
+                "unreviewed": {"count": questionnaire_unreviewed, "percentage": pct(questionnaire_unreviewed, questionnaire_total)},
+                "reviewed": {"count": questionnaire_reviewed, "percentage": pct(questionnaire_reviewed, questionnaire_total)},
+                "archived": {"count": questionnaire_archived, "percentage": pct(questionnaire_archived, questionnaire_total)},
+            },
+            "contact_consent": {
+                "yes": {"count": wants_contact_yes, "percentage": pct(wants_contact_yes, questionnaire_total)},
+                "no": {"count": wants_contact_no, "percentage": pct(wants_contact_no, questionnaire_total)},
+            }
+        },
+        "contact": {
+            "total": contact_total,
+            "by_status": {
+                "new": {"count": contact_new, "percentage": pct(contact_new, contact_total)},
+                "reviewed": {"count": contact_reviewed, "percentage": pct(contact_reviewed, contact_total)},
+                "archived": {"count": contact_archived, "percentage": pct(contact_archived, contact_total)},
+            }
+        }
+    }
+
+@api_router.post("/admin/auth/verify")
+async def verify_admin_auth(admin: str = Depends(verify_admin)):
+    """Admin: Verify credentials are valid"""
+    return {"status": "authenticated", "username": admin}
+
 # Include the router in the main app
 app.include_router(api_router)
 
