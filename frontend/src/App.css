@@ -448,13 +448,16 @@
 /* Responsive */
 @media (max-width: 768px) {
   .footer-nav {
-    padding: 16px 24px;
+    position: relative;
+    padding: 24px;
     flex-direction: column;
     gap: 16px;
   }
 
   .footer-nav-links {
     gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
 
   .questionnaire-section {
