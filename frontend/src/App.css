@@ -428,6 +428,39 @@
 }
 
 /* Partners */
+.partner-category {
+  margin-bottom: 48px;
+}
+
+.partner-category:last-child {
+  margin-bottom: 0;
+}
+
+.partner-category-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+}
+
+.partner-category-description {
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+}
+
+.partner-category-disclaimer {
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-light);
+  margin: 0;
+  font-style: italic;
+}
+
 .partner-item {
   margin-bottom: 40px;
   padding-bottom: 40px;
