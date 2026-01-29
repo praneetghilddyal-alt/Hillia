@@ -513,6 +513,12 @@ async def verify_admin_auth(admin: str = Depends(verify_admin)):
 # Include the router in the main app
 app.include_router(api_router)
 
+# Health check endpoint for Kubernetes liveness/readiness probes
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Kubernetes"""
+    return {"status": "healthy"}
+
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
